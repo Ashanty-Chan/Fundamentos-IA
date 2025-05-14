@@ -73,6 +73,7 @@ class WineDataset(Dataset):
 
     if self.transform:
         sample = self.transform(sample)
+
     return sample
   #=============================
   # Tamaño del conjunto de datos
@@ -98,6 +99,7 @@ class ToTensor:
 class MulTransform:
   def __init__(self, factor):
     self.factor = factor
+
   def __call__(self, sample):
     inputs, targets = sample
     inputs *= self.factor
@@ -110,9 +112,9 @@ if __name__ == "__maim__":
 
   print('Sin transformación')
   dataset = WineDataset()
-  first_data = dataset()
+  first_data = dataset[0]
   features, labels = first_data
-  print( type(features), type (labels))
+  print(type(features), type(labels))
   print(features, labels)
 
   print('\nTransformado en tensor')
@@ -123,7 +125,7 @@ if __name__ == "__maim__":
   print(features, labels)
 
   print('\n Con transformación a tensor y multiplicación')
-  composed = torchvision.transform.Compose([ToTensor(), MulTransform(4)])
+  composed = torchvision.transforms.Compose([ToTensor(), MulTransform(4)])
   dataset = WineDataset(transform=composed)
   first_data = dataset[0]
   features, labels = first_data
