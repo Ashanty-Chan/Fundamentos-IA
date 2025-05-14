@@ -124,7 +124,6 @@ for epoch in range(num_epochs):
     # Corre tu proceso se aprendizaje
     #==================================================================
     # Diagnóstico
-    # ==================================================================
     if (i+1) % 5 == 0:
         print(f'Epoch: {epoch+1}/{num_epochs}, Step {i+1}/{n_iterations}| Inputs {inputs.shape} | Labels {labels.shape}')
 
