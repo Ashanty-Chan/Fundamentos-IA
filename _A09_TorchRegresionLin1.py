@@ -1,5 +1,5 @@
 #===================================
-# REgresión LIneal simple en pytorch
+# Regresión Lineal simple en pytorch
 #===================================
 # Chan Campos Ashanty Iyari
 # Fundamentos de IA
@@ -21,7 +21,7 @@ X_numpy, y_numpy = datasets.make_regression(n_samples=100, n_features=1, noise=2
 #=======================================
 X = torch.from_numpy(X_numpy.astype(np.float32))
 y = torch.from_numpy(y_numpy.astype(np.float32))
-y = y.view(y.shape, 1) #torch necesita de salida al transpuesto
+y = y.view(y.shape[0], 1) #torch necesita de salida al transpuesto
 n_samples, n_features = X.shape
 
 #==========================
@@ -30,13 +30,13 @@ n_samples, n_features = X.shape
 #==========================
 input_size = n_features
 output_size =1
-model = nn.Linear(input_size, output_size
-                  
+model = nn.Linear(input_size, output_size)
+
 #====================
 #Error y optimizador
 #====================
 learning_rate = 0.01
-criteriorn = nn.MSELoss()
+criterion = nn.MSELoss()
 optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
 
 #=========================
@@ -44,21 +44,21 @@ optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
 #=========================
 num_epochs = 200
 for epoch in range(num_epochs):
-    # Evaluación y error 
+    # Evaluación y error
     y_predicted = model(X)
     loss = criterion(y_predicted, y)
-    # Gradiente y m,ejora de coeficientes 
+    # Gradiente y m,ejora de coeficientes
     loss.backward()
     optimizer.step()
     #resetear gradiente
     optimizer.zero_grad()
-    if (epoch+1) % 10 == 0<<<<<<<<<<<<<<<<<:
-        print(f'epoch: {epoch+1}+, loss = {loss.item():.4f}')
-        
+    if (epoch+1) % 10 == 0:
+        print(f'epoch: {epoch+1}, loss = {loss.item():.4f}')
+
 #==========
 # Gráfica
 #==========
 predicted = model(X).detach().numpy()
-plt.plot(X_numpy, y_numpy), 'ro')
-plt.plot(X_numpy, predicted ), 'b')
-    plt.show()
+plt.plot(X_numpy, y_numpy, 'ro')
+plt.plot(X_numpy, predicted , 'b')
+plt.show()
