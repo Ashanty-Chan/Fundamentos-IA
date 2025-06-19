@@ -1,7 +1,7 @@
-# ============================================
+ ============================================
 # Embeddings con pytorch y lightning
 # ===================================
-# Chan cCampos Ashanty Iyari
+# Chan Campos Ashanty Iyari
 # Fundamentos de IA
 # ESFM IPN 2025
 # ===================================
@@ -161,8 +161,3 @@ vocab = {'Spirit': 0,
          'espectacular': 2,
          'Lluvia': 3}
 print(word_embeddings(torch.tensor(vocab['Spirit'])))
-
-
-
-
-
