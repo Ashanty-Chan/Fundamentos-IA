@@ -23,16 +23,16 @@ loss = (y_predicted - y)**2
 
 #==========================================
 # retropropagación para calcular gradiente
-# w.grad es el gradiente 
+# w.grad es el gradiente
 #==========================================
 loss.backward()
 print(w.grad)
 
 #=============================================
 # NUevos coeficientes (descenso de gradiente)
-# repetir evaluación y retropropagación 
+# repetir evaluación y retropropagación
 #=============================================
 with torch.no_grad():
     w -= 0.01 * w.grad
-w.grad.zero()
+w.grad.zero_() # Corrected: Use zero_() on w.grad
 print(w)
