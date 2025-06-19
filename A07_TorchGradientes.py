@@ -38,7 +38,7 @@ print(x.grad)    # dz/dx
 #==============================================
 x = torch.randn(3, requires_grad=True)
 y = x * 2
-for _ in range(10)
+for _ in range(10):
     y = y * 2
 print(y)
 print(y.shape)
@@ -46,7 +46,7 @@ print(y.shape)
 #================================
 # Evaluar "gradiente" dy/dx en v
 #================================
-v = torch.tensor[0.1, 1.0, 0.0001], dtype=torch.float32
+v = torch.tensor([0.1, 1.0, 0.0001], dtype=torch.float32)
 y.backward(v)
 print(x.grad)
 #====================================================
@@ -82,7 +82,7 @@ print(b.requires_grad)
 #=========================================
 a = torch.randn(2, 2, requires_grad=True)
 print(a.requires_grad)
-with torch.no_grad()
+with torch.no_grad():
     print((x ** 2).requires_grad)
 
 #================================================
@@ -100,7 +100,7 @@ for epoch in range (3):
     model_output.backward()
     print(weights.grad)
     # Optimización: encontrar nuevos coeficientes
-    with torch.no_grad()
+    with torch.no_grad():
         weights -= 0.1 * weights.grad
     # Reinicia el gradiente a cero (importante)
     weights.grad.zero_()
@@ -116,8 +116,3 @@ print(model_output)
 # optimizer.step()
 # optimizer.zero_grad()
 #=================================================
-
-
-
-
-
