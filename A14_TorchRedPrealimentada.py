@@ -36,7 +36,7 @@ learning_rate =0.001 #  tasa de aprendizaje  (para que se vaya con calma)
 train_dataset = torchvision.datasets.MNIST(root='./data',
                                             train = True,
                                            transform=transforms.ToTensor(),
-                                          downloand=True)
+                                          download=True)
 test_dataset = torchvision.datasets.MNIST(root='./data',
                                            train =False,
                                           transform=transforms.ToTensor())
@@ -65,8 +65,8 @@ plt.show()
 # Red neuronal completamente conectada con una caja oculta
 #===========================================================
 class NeuralNet(nn.Module):
-  def __int__(self, input_size, hidden_size, num_classes):
-    super(NeuralNet, self).__int__()
+  def __init__(self, input_size, hidden_size, num_classes):
+    super(NeuralNet, self).__init__()
     self.input_size = input_size
     self.l1 = nn.Linear(input_size, hidden_size)
     self.relu = nn.ReLU()
@@ -83,7 +83,7 @@ class NeuralNet(nn.Module):
 #===================================
 # Correr modelo en el GPU
 #===============================
-model = NeuralNet(input_size,hidden_size, num_classes).to(devise)
+model = NeuralNet(input_size,hidden_size, num_classes).to(device)
 
 #===================================
 # Optimización y cálculo de error
@@ -99,8 +99,8 @@ for epoch in range(num_epochs):
   for i, (images, labels) in enumerate(train_loader):
     # Dimensiones originalesn: [100,1,28, 28]
     # Nuevas dimensiones : [100,784]
-    images = images.reshape(-1,28*28).to(devise)
-    labels = labels.to(devise)
+    images = images.reshape(-1,28*28).to(device)
+    labels = labels.to(device)
 
     # Evaluación
     outputs = model(images)
@@ -119,7 +119,7 @@ for epoch in range(num_epochs):
 # Checar el modelo
 # En fase de prueba , no requerimos calcular gradientes
 #=======================================================
-whith torch.no_grad():
+with torch.no_grad():
   n_correct = 0
   n_samples = 0
   for images, labels in test_loader:
