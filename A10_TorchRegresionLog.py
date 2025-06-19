@@ -95,4 +95,4 @@ with torch.no_grad():
     y_predicted = model(X_test)
     y_predicted_cls = y_predicted.round()
     acc = y_predicted_cls.eq(y_test).sum() / float(y_test.shape[0])
-    print(f 'precisión:{acc.item():.4f}')
+    print(f'precisión:{acc.item():.4f}')
