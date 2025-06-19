@@ -15,12 +15,11 @@ import torchvision.transforms as transforms
 import matplotlib.pyplot as plt
 import numpy as np
 
-from A14_TorchRedPrealimentada import train_dataset, test_loader
 
 #========================
 # Configuración del GPU
 #========================
-device == torch.device('cuda' if torch.cuda.is_aviable() else 'cpu')
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 #==================
 # Hiper-parámetros
@@ -51,7 +50,7 @@ test_dataset = torchvision.datasets.CIFAR10(root='./data', train=False,
 train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size,
                                            shuffle=True)
 
-train_loader = torch.utils.data.DataLoader(test_dataset, batch_size=batch_size,
+test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=batch_size,
                                            shuffle=False)
 
 #=======================
@@ -63,8 +62,8 @@ classes = ('plane', 'car', 'bird', 'cat',
 #==========================
 # Graficar con matplotlib
 #==========================
-def imsgow(img):
-    img = img =2 + 0.5   #unnormalize
+def imshow(img):
+    img = img / 2 + 0.5   #unnormalize
     npimg = img.numpy()
     plt.imshow(np.transpose(npimg, (1, 2, 0)))
     plt.show()
@@ -84,7 +83,7 @@ imshow(torchvision.utils.make_grid(images))
 # Red neuronal convolucinal
 #===========================
 class ConvNet(nn.Module):
-    def __init__(self:
+    def __init__(self):
         super(ConvNet, self).__init__()
                  # 3 entradas (a color), 6 salidas (filtros), 5x5 entradas en el Kernel de convolución
         self.conv1 = nn.Conv2d(3, 6, 5)
@@ -94,22 +93,22 @@ class ConvNet(nn.Module):
         self.conv2 = nn.Conv2d(6, 16, 5)
         # Redes lineales (entradas, salidas)
         self.fc1 = nn.Linear(16 * 5 * 5, 120)
-        self.fc1 = nn.Linear(120, 84)
-        self.fc1 = nn.Linear(84, 10)
+        self.fc2 = nn.Linear(120, 84)
+        self.fc3 = nn.Linear(84, 10)
 
     def forward(self, x):
         # -> n, 3, 32, 32
-    #maxpool( relu (convolución ) )
-    x = self.pool(F.relu(self.conv1(x)))    # -> n, 6, 14, 14
-    x = self.pool(F.relu(self.conv2(x)))    # -> n, 16, 5, 6
-    # Reorganizar al tensor x
-    x = x.view(-1, 16 * 5 * 5)              # -> n, 400
-    # Redes lineales + relu
-    x = F.relu(self.fc1(x))                  # -> n, 120
-    x = F.relu(self.fc2(x))                  # -> n, 84
-    # Red lineal
-    x = self.fc3(x)
-    return x
+        #maxpool( relu (convolución ) )
+        x = self.pool(F.relu(self.conv1(x)))    # -> n, 6, 14, 14
+        x = self.pool(F.relu(self.conv2(x)))    # -> n, 16, 5, 6
+        # Reorganizar al tensor x
+        x = x.view(-1, 16 * 5 * 5)              # -> n, 400
+        # Redes lineales + relu
+        x = F.relu(self.fc1(x))                  # -> n, 120
+        x = F.relu(self.fc2(x))                  # -> n, 84
+        # Red lineal
+        x = self.fc3(x)
+        return x
 
 #=============================
 # Correr el modelo en el GPU
@@ -130,24 +129,24 @@ for epoch in range(num_epochs):
         # Formato original: [4, 3, 32, 32] = 4, 3, 1024
         # Capa de entrada: 3 canales de entrada, 6 canales de salida, 5 tamaño del kernel
 
-    # imágenes
-    images = images.to(device)
+        # imágenes
+        images = images.to(device)
 
-    # etiquetas
-    labels = labels.to(device)
+        # etiquetas
+        labels = labels.to(device)
 
-    # Evaluación (forward pass)
-    outputs = model(images)
-    loss = criterion(outputs, labels)
+        # Evaluación (forward pass)
+        outputs = model(images)
+        loss = criterion(outputs, labels)
 
-    # Gradiente y optimización (backward)
-    #  inicializar gradiente a cero + calcularlo + aplicarlo
-    optimizer.zero_grad()
-    loss.backward()
-    optimizer.step()
+        # Gradiente y optimización (backward)
+        #  inicializar gradiente a cero + calcularlo + aplicarlo
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
 
-    if (i+1) % 2000 == 0:
-        print(f'Epoch [{epoch+1}/{num_epochs}], Step [{i+1}/{n_total_steps}], Loss: {loss.item():.4f}')
+        if (i+1) % 2000 == 0:
+            print(f'Epoch [{epoch+1}/{num_epochs}], Step [{i+1}/{n_total_steps}], Loss: {loss.item():.4f}')
 print('Entrenamiento completo')
 
 #============================================
@@ -167,7 +166,7 @@ with torch.no_grad():
     for images, labels in test_loader:
         images = images.to(device)
         labels = labels.to(device)
-        otputs = model(images)
+        outputs = model(images)
         # max regresa (valor, índice)
         _, predicted = torch.max(outputs, 1)
         n_samples += labels.size(0)
@@ -184,6 +183,5 @@ with torch.no_grad():
     print(f'Precisión del modelo: {acc} %')
 
     for i in range(10):
-        acc = 100.0 * n_correct[i] / n_class_samples[i]
-        print(f'Precisión de {clases[i]}: {acc} %')
-
+        acc = 100.0 * n_class_correct[i] / n_class_samples[i]
+        print(f'Precisión de {classes[i]}: {acc} %')
